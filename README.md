@@ -11,7 +11,7 @@
 
 ### Step 2: Install Dependencies
 
-1.  Install Dependencies
+1.  Install Django and Pillow
 
 `pip install django Pillow` 
 
