@@ -28,9 +28,7 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
             password = serializer.validated_data['password']
             phone_number = serializer.validated_data.get('phone_number')
             role = Roles.MEMBER
-            User = get_user_model()
-            user = User.objects.create_user(username=username, password=password, phone_number=phone_number)
-            user_profile = FitLinkrUser.objects.create(user=user, phone_number=phone_number, role=role)
+            user = FitLinkrUser.objects.create_user(username=username, password=password, phone_number=phone_number, role=role)
             return Response({'message': 'Member created successfully'}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -51,9 +49,7 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
             password = serializer.validated_data['password']
             phone_number = serializer.validated_data.get('phone_number')
             role = Roles.TRAINER
-            User = get_user_model()
-            user = User.objects.create_user(username=username, password=password, phone_number=phone_number)
-            user_profile = FitLinkrUser.objects.create(user=user, phone_number=phone_number, role=role)
+            user = FitLinkrUser.objects.create_user(username=username, password=password, phone_number=phone_number, role=role)
             return Response({'message': 'Trainer created successfully'}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -113,7 +109,7 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
         serializer = FitLinkrUserSerializer(queryset, many=True)
         return Response(serializer.data)
     
-    # GET: /users/read/<user_id>/
+    # GET: /users/<user_id>/read/
     @action(detail=True, methods=['get'])
     def read(self, request, pk=None):
         try:
@@ -123,7 +119,7 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
         except FitLinkrUser.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    # DELETE: /users/delete/<user_id>/
+    # DELETE: /users/<user_id>/delete/
     @action(detail=True, methods=['delete'])
     def delete(self, request, pk=None):
         try:
