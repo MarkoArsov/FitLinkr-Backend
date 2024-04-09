@@ -18,12 +18,13 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 from fitlinkr_app.views import user_views
-from fitlinkr_app import urls as fitlinkr_app_urls
 from rest_framework.routers import DefaultRouter
-from fitlinkr_app.views.user_views import FitLinkrUserViewSet
+from fitlinkr_app.views import FitLinkrUserViewSet, WorkoutViewSet, AppointmentViewSet
 
 router = DefaultRouter()
 router.register(r'users', FitLinkrUserViewSet, basename='users')
+router.register(r'workouts', WorkoutViewSet, basename='workouts')
+router.register(r'appointments', AppointmentViewSet, basename='appointments')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
