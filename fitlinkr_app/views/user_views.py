@@ -2,12 +2,12 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets
-from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import authenticate, login, logout
 from fitlinkr_app.serializers import FitLinkrUserSerializer
 from fitlinkr_app.models import FitLinkrUser
 from fitlinkr_app.models import Roles
+
 
 class FitLinkrUserViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
@@ -28,7 +28,8 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
             password = serializer.validated_data['password']
             phone_number = serializer.validated_data.get('phone_number')
             role = Roles.MEMBER
-            user = FitLinkrUser.objects.create_user(username=username, password=password, phone_number=phone_number, role=role)
+            user = FitLinkrUser.objects.create_user(username=username, password=password, phone_number=phone_number,
+                                                    role=role)
             return Response({'message': 'Member created successfully'}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -49,7 +50,8 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
             password = serializer.validated_data['password']
             phone_number = serializer.validated_data.get('phone_number')
             role = Roles.TRAINER
-            user = FitLinkrUser.objects.create_user(username=username, password=password, phone_number=phone_number, role=role)
+            user = FitLinkrUser.objects.create_user(username=username, password=password, phone_number=phone_number,
+                                                    role=role)
             return Response({'message': 'Trainer created successfully'}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -72,7 +74,7 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except FitLinkrUser.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-    
+
     # Payload:
     # {
     #     "username": "example_user",
@@ -101,14 +103,14 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
     def current_user(self, request):
         serializer = FitLinkrUserSerializer(request.user)
         return Response(serializer.data)
-    
+
     # GET: /users/list_users/
     @action(detail=False, methods=['get'])
     def list_users(self, request):
         queryset = FitLinkrUser.objects.all()
         serializer = FitLinkrUserSerializer(queryset, many=True)
         return Response(serializer.data)
-    
+
     # GET: /users/<user_id>/read/
     @action(detail=True, methods=['get'])
     def read(self, request, pk=None):

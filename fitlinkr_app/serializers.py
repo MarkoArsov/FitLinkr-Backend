@@ -1,16 +1,19 @@
 from rest_framework import serializers
 from .models import FitLinkrUser, Workout, Appointment
 
+
 class FitLinkrUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = FitLinkrUser
         fields = ['id', 'username', 'password', 'phone_number']
         extra_kwargs = {'password': {'write_only': True}}
 
+
 class WorkoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workout
-        fields = ['id', 'user', 'name', 'description', 'price', 'category', 'location', 'available_spots', 'rating']
+        fields = ['id', 'user', 'name', 'description', 'price', 'category', 'location', 'rating']
+
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
