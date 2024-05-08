@@ -8,7 +8,6 @@ from fitlinkr_app.serializers import FitLinkrUserSerializer
 from fitlinkr_app.models import FitLinkrUser
 from fitlinkr_app.models import Roles
 
-
 class FitLinkrUserViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
@@ -93,7 +92,7 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
     # POST: /users/logout/
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def logout(self, request):
         logout(request)
         return Response({'message': 'Logout successful'})
@@ -112,7 +111,7 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     # GET: /users/<user_id>/read/
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
     def read(self, request, pk=None):
         try:
             user = FitLinkrUser.objects.get(pk=pk)
@@ -122,7 +121,7 @@ class FitLinkrUserViewSet(viewsets.ViewSet):
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
     # DELETE: /users/<user_id>/delete/
-    @action(detail=True, methods=['delete'])
+    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
     def delete(self, request, pk=None):
         try:
             user = FitLinkrUser.objects.get(pk=pk)

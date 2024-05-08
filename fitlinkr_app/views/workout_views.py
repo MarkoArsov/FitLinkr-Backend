@@ -4,11 +4,17 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import viewsets
 from fitlinkr_app.models import Workout
+from fitlinkr_app.models import Categories
 from fitlinkr_app.serializers import WorkoutSerializer
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class WorkoutViewSet(viewsets.ViewSet):
-    permission_classes = [AllowAny]
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     # POST: /workouts/create_workout/
     @action(detail=False, methods=['post'])
@@ -46,10 +52,30 @@ class WorkoutViewSet(viewsets.ViewSet):
     # GET: /workouts/list_workouts/
     @action(detail=False, methods=['get'])
     def list_workouts(self, request):
-        queryset = Workout.objects.all()
+        category_param = request.query_params.get('category', None)
+        
+        if category_param:
+            queryset = Workout.objects.filter(category=category_param)
+        else:
+            queryset = Workout.objects.all()
+        
         serializer = WorkoutSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    # GET: /workouts/list_categories/
+    @action(detail=False, methods=['get'])
+    def list_categories(self, request):
+        categories = [category.value for category in Categories]
+        return Response(categories)
+    
+    # GET: /workouts/list_workouts_by_user/
+    @action(detail=False, methods=['get'])
+    def list_workouts_by_user(self, request):
+        user = request.user
+        queryset = Workout.objects.filter(user=user)
+        serializer = WorkoutSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
     # GET: /workouts/<workout_id>/read/
     @action(detail=True, methods=['get'])
     def read(self, request, pk=None):
