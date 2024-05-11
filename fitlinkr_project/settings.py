@@ -143,3 +143,9 @@ import os
 MEDIA_ROOT = os.path.join(BASE_DIR, 'data/')
 
 MEDIA_URL = '/data/'
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = (
+    'http://yourfrontenddomain.com',
+)
