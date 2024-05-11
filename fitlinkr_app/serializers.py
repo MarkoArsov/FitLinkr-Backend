@@ -16,6 +16,8 @@ class WorkoutSerializer(serializers.ModelSerializer):
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
+    workout = serializers.PrimaryKeyRelatedField(queryset=Workout.objects.all())
+    users = serializers.PrimaryKeyRelatedField(many=True, queryset=FitLinkrUser.objects.all(), required=False)
     class Meta:
         model = Appointment
         fields = ['id', 'workout', 'start_date', 'end_date', 'available_spots', 'users']
