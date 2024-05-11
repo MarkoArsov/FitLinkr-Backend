@@ -13,6 +13,16 @@ class WorkoutViewSet(viewsets.ViewSet):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
+    # Payload:
+    # {
+    #     "user": 8,
+    #     "name": "Strength Training Session 2",
+    #     "description": "Full body strength training session focusing on compound lifts.",
+    #     "price": 10.00,
+    #     "category": "strength",
+    #     "location": "Gym Name, City, Country",
+    #     "rating": 4.5
+    # }
     # POST: /workouts/create_workout/
     @action(detail=False, methods=['post'])
     def create_workout(self, request):
@@ -22,7 +32,17 @@ class WorkoutViewSet(viewsets.ViewSet):
             return Response({'message': 'Workout created successfully'}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
+    # Payload:
+    # {
+    #     "user": 8,
+    #     "name": "Strength Training Session 2",
+    #     "description": "Full body strength training session focusing on compound lifts.",
+    #     "price": 10.00,
+    #     "category": "strength",
+    #     "location": "Gym Name, City, Country",
+    #     "rating": 4.5
+    # }
     # POST: /workouts/<workout_id>/
     def update(self, request, pk=None):
         try:
@@ -65,11 +85,11 @@ class WorkoutViewSet(viewsets.ViewSet):
         categories = [category.value for category in Categories]
         return Response(categories)
     
-    # GET: /workouts/list_workouts_by_user/
+    # GET: /workouts/list_workouts_by_trainer/
     @action(detail=False, methods=['get'])
-    def list_workouts_by_user(self, request):
-        user = request.user
-        queryset = Workout.objects.filter(user=user)
+    def list_workouts_by_trainer(self, request):
+        trainer = request.user
+        queryset = Workout.objects.filter(user=trainer)
         serializer = WorkoutSerializer(queryset, many=True)
         return Response(serializer.data)
     
